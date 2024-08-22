@@ -33,4 +33,5 @@ jobs:
           PATH=$HOME/go/bin:$PATH gotestsum --junitfile junit.xml ./...
       - name: Test web server
         run: |
+          ./bin/main 8001 &
           curl --silent localhost:8001/time | grep "The current time is"
