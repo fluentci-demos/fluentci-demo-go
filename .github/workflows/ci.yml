@@ -31,6 +31,8 @@ jobs:
           pkgx psql --host=localhost -d postgres -U `whoami` -c 'GRANT ALL ON SCHEMA public TO postgres;'
           go install gotest.tools/gotestsum@latest
           PATH=$HOME/go/bin:$PATH gotestsum --junitfile junit.xml ./...
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Test web server
         run: |
           ./bin/main 8001 &
