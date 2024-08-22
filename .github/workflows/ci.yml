@@ -1,0 +1,35 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup FluentCI
+        uses: fluentci-io/setup-fluentci@v5
+        with:
+          wasm: true
+          plugin: pkgx
+          args: install go
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: go get & build
+        run: |
+          go get
+          go build -o ./bin/main
+      - name: Check code style
+        run: gofmt main.go | diff --ignore-tab-expansion main.go -
+      - name: go test
+        run: |
+          fluentci run --wasm postgres start
+          pkgx psql --host=localhost -d postgres -U `whoami` -c 'CREATE DATABASE s2;'
+          pkgx psql --host=localhost -d postgres -U `whoami` -c 'CREATE USER postgres CREATEROLE;'
+          pkgx psql --host=localhost -d postgres -U `whoami` -c 'GRANT ALL PRIVILEGES ON DATABASE s2 TO postgres;'
+          go install gotest.tools/gotestsum@latest
+          gotestsum --junitfile junit.xml ./...
+      - name: Test web server
+        run: |
+          curl --silent localhost:8001/time | grep "The current time is"
