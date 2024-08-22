@@ -35,6 +35,7 @@ jobs:
           PATH=$HOME/go/bin:$PATH gotestsum --junitfile junit.xml ./...
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NIX_CONFIG: "extra-access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
       - name: Test web server
         run: |
           ./bin/main 8001 &
