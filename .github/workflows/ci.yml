@@ -35,4 +35,4 @@ jobs:
       - name: Test web server
         run: |
           ./bin/main 8001 &
-          curl --silent localhost:8001/time | grep "The current time is"
+          curl --silent localhost:8001/time | grep 'The current time is'
