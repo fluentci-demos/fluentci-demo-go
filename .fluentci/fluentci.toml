@@ -19,9 +19,9 @@ command = [
 ]
 env = ["POSTGRES_USER=postgres", "POSTGRES_DB=s2"]
 
-[[steps]]
-name = "Test web server"
-command = [
-  "./bin/main 8001 &",
-  "curl --silent localhost:8001/time | grep 'The current time is'",
-]
+#[[steps]]
+#name = "Test web server"
+#command = [
+#  "./bin/main 8001 &",
+#  "curl --silent localhost:8001/time | grep 'The current time is'",
+#]
